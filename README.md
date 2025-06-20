@@ -13,13 +13,10 @@ Browser ──► PHP 8.1 CLI server (Monolith)
                 │
                 ├─ MySQL 8   – persistent data (menu, orders, users)
                 ├─ Redis 7   – sessions + kitchen queue
-                └─ Cron      – batch email for order status
 ```
 
 * **Tech stack**: plain PHP (no framework) organised in a basic MVC folder layout.  
 * **Single deployable**: all business domains live in one codebase and share a single database.  
-* **Cross‑cutting helpers** in `helpers.php` handle pricing, discounts, and loyalty points.
-
 ---
 
 ## 2. Directory Structure
@@ -30,11 +27,9 @@ Browser ──► PHP 8.1 CLI server (Monolith)
 | `app/Controllers/` | Thin HTTP controllers |
 | `app/Models/` | Active‑Record style classes mapping tables |
 | `app/Views/` | Templates for HTML rendering |
-| `app/Helpers/` | `helpers.php` with global functions & side effects |
 | `database/migrations/` | SQL files for schema setup |
 | `scripts/` | Seed/utility scripts (`seed_demo_data.php`, `send_order_emails.php`) |
-| `docker/` | Dockerfiles and `docker-compose.yml` |
-| `tests/` | PHPUnit tests (coverage is intentionally thin) |
+| `docker/` | Dockerfiles and `docker-compose.yml` lives in root|
 
 ---
 
@@ -83,27 +78,6 @@ docker compose down -v --rmi local
 
 ---
 
-## 5. Testing
-
-Run tests with PHPUnit:
-
-```bash
-# With Docker
-docker compose exec php vendor/bin/phpunit
-
-# Without Docker
-vendor/bin/phpunit
-```
-
----
-
-## 6. Cron & Batch Jobs
-
-- Order status emails are sent by a cron job running `scripts/send_order_emails.php` every minute.
-- Cron is configured in the Docker container; see `docker/crontab` for details.
-
----
-
 ## 7. Project Structure & Migration Talking Points
 
 * **Hot spot:** `menu` reads – perfect candidate for first microservice.  
@@ -112,25 +86,17 @@ vendor/bin/phpunit
 
 ---
 
-## 7. Tests
+## 7. Cleaning Up
 
 ```bash
-docker compose exec php vendor/bin/phpunit
+docker compose down -v    # stops containers and removes volumes
 ```
 
 _Coverage is intentionally minimal to highlight difficulties when migrating legacy code._
 
 ---
 
-## 8. Cleaning Up
-
-```bash
-docker compose down -v    # stops containers and removes volumes
-```
-
----
-
-### License
+## 8. License
 
 MIT – for demo and educational use.
 
