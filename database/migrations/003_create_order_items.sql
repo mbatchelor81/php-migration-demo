@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS order_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  menu_id INT NOT NULL,
+  quantity INT NOT NULL,
+  price DECIMAL(8,2) NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (menu_id) REFERENCES menu(id)
+);
